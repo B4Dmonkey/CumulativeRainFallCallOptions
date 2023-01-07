@@ -3,3 +3,7 @@
 /api/bin
 /api/__pycache__
 pyvenv.cfg
+/api/.env
+*.db
+.DS_STORE
+*.xlsx
