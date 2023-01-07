@@ -10,6 +10,8 @@ class TestAPI(unittest.TestCase):
         notional = 25000
         self.assertEqual(payout(strike, ex, notional), 50000)
 
+    def test_dataLoaded(self):
+        pass
 
 
 if __name__ == '__main__':
