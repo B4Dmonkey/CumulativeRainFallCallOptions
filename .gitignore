@@ -7,3 +7,4 @@ pyvenv.cfg
 *.db
 .DS_STORE
 *.xlsx
+/ui/node_modules
