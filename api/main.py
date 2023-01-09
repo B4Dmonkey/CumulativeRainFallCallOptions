@@ -6,15 +6,9 @@ from models import RainData, database
 from peewee import fn
 
 
-def create_app():
-    app = Flask(__name__)
-    return app
-
-
-# app = Flask(__name__)
-app = create_app()
+app = Flask(__name__)
 log = app.logger
-CORS(app)
+CORS(app, origins="*")
 
 
 @app.route("/")
@@ -41,7 +35,6 @@ def payout(strike: float, exit_: float, notional: float) -> float:
 
 
 @app.route('/rainfall/<startDate>/<endDate>', methods=['GET'])
-# def rainfall_index():
 def rainfall_index(startDate: datetime, endDate: datetime):
     start = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     end = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
@@ -61,7 +54,9 @@ def rainfall_index(startDate: datetime, endDate: datetime):
             .where((queryStartMonth) & (RainData.date.day.between(start.day, end.day)))
             .group_by(yearAsCol)
         )
-    return {data.year:data.value for data in query}
+    return [{'year': data.year, 'rain_in_inches':data.value} for data in query]
+    # return [{'key': data.year, 'value':data.value} for data in query]
+    # return {data.year: data.value for data in query}
     # queryStartMonth = fn.date_part('month', RainData.date) == 6
     # queryEndMonth = fn.date_part('month', RainData.date) <= 6
 
@@ -73,13 +68,13 @@ def rainfall_index(startDate: datetime, endDate: datetime):
 
     # for data in query:
     #     log.info(f"Year: {data.year} Value: {data.value}")
-        # print(data)
+    # print(data)
     # * Get the year
     # for data in RainData.select().where((RainData.date.month.between(start.month, end.month)) & (RainData.date.day.between(start.day, end.day))):
     #     print(f"Date: {data.date} Value: {data.value}")
     #     x = 1
     # months = RainData.select().where((RainData.date.month >= start.month)
-        #  & (RainData.date.month <= end.month))
+    #  & (RainData.date.month <= end.month))
     # [r for r in RainData.select().where( (RainData.date.month >= 6) & (RainData.date.month <= 6) )]
     # query = []
     # query = RainData \
