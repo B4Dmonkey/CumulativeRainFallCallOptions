@@ -4,6 +4,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from models import RainData, database
 from peewee import fn
+import numpy as np
 
 
 app = Flask(__name__)
@@ -27,9 +28,43 @@ def after_request(response=None):
     return response
 
 
-def payout(strike: float, exit_: float, notional: float) -> float:
-    INDEX = 18  # should be the rainfall
-    strikeIndex = max(INDEX - strike, 0)
+@app.route("/<option_type>/<startDate>/<endDate>/<strike>/<exit_>/<notional>", methods=['GET'])
+def calculate(option_type: str, startDate: datetime, endDate: datetime, strike: float, exit_: float, notional: float):
+    index = rainfall_index(startDate, endDate)
+    data = [
+        dict(
+            year=i['year'],
+            index=i['index'],
+            payout=payout(float(strike), float(exit_),
+                          float(notional), i['index'])
+        )
+        for i in index
+    ]
+
+    index_array = [i['index'] for i in data]
+    payout_array = [p['payout'] for p in data]
+
+    summary = dict(
+        index=dict(
+            min=min(index_array),
+            max=max(index_array),
+            average=np.mean(index_array),
+            std=np.std(index_array)
+        ),
+        payout=dict(
+            min=min(payout_array),
+            max=max(payout_array),
+            average=np.mean(payout_array),
+            std=np.std(payout_array)
+        )
+    )
+
+    return dict(summary=summary, results=data)
+
+
+def payout(strike: float, exit_: float, notional: float, index: float) -> float:
+    # todo need to account for call vs put
+    strikeIndex = max(index - strike, 0)
     layer = min(exit_ - strike, strikeIndex)
     return layer * notional
 
@@ -54,7 +89,7 @@ def rainfall_index(startDate: datetime, endDate: datetime):
             .where((queryStartMonth) & (RainData.date.day.between(start.day, end.day)))
             .group_by(yearAsCol)
         )
-    return [{'year': data.year, 'rain_in_inches':data.value} for data in query]
+    return [{'year': data.year, 'index': data.value} for data in query]
     # return [{'key': data.year, 'value':data.value} for data in query]
     # return {data.year: data.value for data in query}
     # queryStartMonth = fn.date_part('month', RainData.date) == 6

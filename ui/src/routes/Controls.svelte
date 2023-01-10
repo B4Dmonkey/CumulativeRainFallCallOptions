@@ -1,18 +1,16 @@
 <script lang="ts">
-  let strike: Number;
-  let exit: Number;
-  let notional: Number;
-
-  let startDate: Date;
-  let endDate: Date;
+  import {strike, exit, notional, optionType, startDate, endDate, data, stats} from "./store"
 
   async function getData() {
     try {
       //Todo this is going to be one api call
       //Need validations etc to make sure this part isn't breaking
-      const response = await fetch(`http://127.0.0.1:5000/rainfall/${startDate}/${endDate}`);
-      const index = await response.json();
-      console.log(`index is ${index}`)
+      const url = `http://127.0.0.1:5000/${$optionType}/${$startDate}/${$endDate}/${$strike}/${$exit}/${$notional}`
+      const response = await fetch(url);
+      const data = await response.json();
+      $data = data.results;
+      $stats = data.summary;
+      
     } catch (error) {
       console.error(`Error getting Rain Fall Index\n${error}`);
     }
@@ -28,6 +26,7 @@
       id="input-strike"
       class="input input-bordered w-half max-w-xs"
       type="number"
+      bind:value={$strike}
     />
   </div>
 
@@ -39,6 +38,7 @@
       id="input-exit"
       class="input input-bordered w-half max-w-xs"
       type="number"
+      bind:value={$exit}
     />
   </div>
 
@@ -50,6 +50,7 @@
       id="input-notional"
       class="input input-bordered w-half max-w-xs"
       type="number"
+      bind:value={$notional}
     />
   </div>
 
@@ -60,10 +61,8 @@
     <input 
       type="date" 
       id="input-start" 
-      name="trip-start"
-      bind:value={startDate}
-      min="2018-01-01" 
-      max="2018-1-31"
+      name="input-start"
+      bind:value={$startDate}
     >
   </div>
 
@@ -74,10 +73,8 @@
     <input 
       type="date" 
       id="input-end" 
-      name="trip-start"
-      bind:value={endDate}
-      min="2018-01-01" 
-      max="2018-1-31"
+      name="input-end"
+      bind:value={$endDate}
     >
   </div>
 

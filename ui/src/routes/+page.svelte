@@ -1,37 +1,28 @@
 <script lang="ts">
-  import data from './data';
   import Controls from './Controls.svelte';
+  import Table from './Table.svelte';
 	import LineGraph from './LineGraph.svelte';
-
-  let show: boolean = false;
-
-  let startDate: Date;
-  let endDate: Date;
-
-  async function getRainFallIndex() {
-    try {
-      console.log(`The Start Date is ${startDate}`);
-      console.log(`The End Date is ${endDate}`);
-      
-      const response = await fetch(`http://127.0.0.1:5000/rainfall/${startDate}/${endDate}`);
-      const index = await response.json();
-      console.log(`index is ${index}`)
-    } catch (error) {
-      console.error(`Error getting Rain Fall Index\n${error}`);
-    }
-    // ! need to make sure this can only be done with valid dates
-  };
-
+  import {stats} from "./store"
 </script>
 
+<div>
+  <h1>Stats {$stats}</h1>
+  <!-- <h1>Strike {$strike}</h1>
+  <h1>Exit {$exit}</h1>
+  <h1>Notional {$notional}</h1>
+  <h1>Start Date {$startDate}</h1>
+  <h1>End Date {$endDate}</h1>
+  <h1>Data {$data}</h1> -->
+</div>
 <div id="app" class="h-screen grid grid-cols-1 gap-10 content-center">
   <div>
-    <Controls/>
+    <Controls />
   </div>
   <div>
-    <h1>Data goes here</h1>
+    <Table/>
+  </div>
+    <!-- <h1>Data goes here</h1> -->
     <!-- <label for="show" style="display: inline;">Show Line:</label>
     <input id="show" type="checkbox" bind:checked={show} />
     <LineGraph {data} {show} /> -->
-  </div>
 </div>
