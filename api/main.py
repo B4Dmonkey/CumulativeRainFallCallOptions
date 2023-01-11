@@ -43,21 +43,30 @@ def calculate(option_type: str, startDate: datetime, endDate: datetime, strike: 
 
     index_array = [i['index'] for i in data]
     payout_array = [p['payout'] for p in data]
-
+    # summary = [
+    #   dict(stat='min', index=min(index_array), payout=min(payout_array)),
+    #   dict(stat='max', index=max(index_array), payout=max(payout_array)),
+    #   dict(stat='avg', index=np.mean(index_array), payout=np.mean(payout_array)),
+    #   dict(stat='std', index=np.std(index_array), payout=np.std(payout_array))
+    # ]
     summary = dict(
         index=dict(
             min=min(index_array),
             max=max(index_array),
-            average=np.mean(index_array),
+            avg=np.mean(index_array),
             std=np.std(index_array)
         ),
         payout=dict(
             min=min(payout_array),
             max=max(payout_array),
-            average=np.mean(payout_array),
+            avg=np.mean(payout_array),
             std=np.std(payout_array)
         )
     )
+
+    # summary = [
+    #   {}
+    # ]
 
     return dict(summary=summary, results=data)
 
