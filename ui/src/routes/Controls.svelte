@@ -95,7 +95,7 @@
       </select>
     </div>
     <div class="place-self-center">
-      <button class="btn" on:click={getData}>Query</button>
+      <button class="btn btn-primary" on:click={getData}>Query</button>
     </div>
   </div>
 </div>

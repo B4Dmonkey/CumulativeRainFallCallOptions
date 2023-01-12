@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import  old_data  from "./data"
 
 export const strike = writable(0);
 export const exit = writable(0);
@@ -7,9 +8,11 @@ export const optionType = writable('call');
 
 export const startDate = writable(today());
 export const endDate = writable(today());
-export const data = writable([]);
-export const stats = writable({});
+// export const data = writable([]);
+// export const stats = writable({});
 
+export const data = writable(old_data.results);
+export const stats = writable(old_data.summary);
 function today() {
 	const date = new Date();
 	const year = date.getFullYear();

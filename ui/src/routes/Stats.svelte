@@ -3,35 +3,35 @@
   import { stats } from './store';
 </script>
 {#if !_.isEmpty($stats)}
-  <div id='stats'>
-    <table>
+  <div id='stats' class="overflow-x-auto">
+    <table class="table w-full">
       <thead>
         <tr>
-          <th>Stats</th>
+          <th>Stat</th>
           <th>Index</th>
           <th>Payout</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="flex w-full mb-6">
-            <td class="p-4 w-1/4">Min</td>
-            <td class="p-4 w-1/4">{$stats.index.min}</td>
-            <td class="p-4 w-1/4">{$stats.payout.min}</td>
+        <tr class="hover">
+            <td>Min</td>
+            <td>{$stats.index.min.toFixed(5)}</td>
+            <td>{$stats.payout.min.toFixed(5)}</td>
         </tr>
-        <tr class="flex w-full mb-6">
-          <td class="p-4 w-1/4">Max</td>
-          <td class="p-4 w-1/4">{$stats.index.max}</td>
-          <td class="p-4 w-1/4">{$stats.payout.max}</td>
+        <tr class="hover">
+          <td>Max</td>
+          <td>{$stats.index.max.toFixed(5)}</td>
+          <td>{$stats.payout.max.toFixed(5)}</td>
         </tr>
-        <tr class="flex w-full mb-6">
-          <td class="p-4 w-1/4">Avg</td>
-          <td class="p-4 w-1/4">{$stats.index.avg}</td>
-          <td class="p-4 w-1/4">{$stats.payout.avg}</td>
+        <tr class="hover">
+          <td>Avg</td>
+          <td>{$stats.index.avg.toFixed(5)}</td>
+          <td>{$stats.payout.avg.toFixed(5)}</td>
         </tr>
-        <tr class="flex w-full mb-6">
-          <td class="p-4 w-1/4">Std</td>
-          <td class="p-4 w-1/4">{$stats.index.std}</td>
-          <td class="p-4 w-1/4">{$stats.payout.std}</td>
+        <tr class="hover">
+          <td>Std</td>
+          <td>{$stats.index.std.toFixed(5)}</td>
+          <td>{$stats.payout.std.toFixed(5)}</td>
         </tr>
       </tbody>
     </table>

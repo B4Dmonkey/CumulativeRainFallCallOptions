@@ -28,8 +28,8 @@
     </div>
     <!-- Summary -->
     <div>
-      <h1>Stats</h1>
-      <!-- <Stats/> -->
+      <!-- <h1>Stats</h1> -->
+      <Stats/>
     </div>
   </div>
   <!-- Full Results -->
