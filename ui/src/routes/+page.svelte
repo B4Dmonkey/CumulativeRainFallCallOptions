@@ -7,7 +7,6 @@
   import { optionType } from "./store"
 </script>
 
-<h1>Option Type {$optionType}</h1>
 <div id="app" class="h-screen grid grid-cols-1 gap-10">
   <!-- Inputs -->
   <div>
@@ -28,13 +27,12 @@
     </div>
     <!-- Summary -->
     <div>
-      <!-- <h1>Stats</h1> -->
       <Stats/>
     </div>
   </div>
   <!-- Full Results -->
-  <div class="grid grid-cols-1 justify-items-center">
-    <h1>Table</h1>
-    <!-- <Table/> -->
+  <div>
+    <!-- <h1>Table</h1> -->
+    <Table/>
   </div>
 </div>
