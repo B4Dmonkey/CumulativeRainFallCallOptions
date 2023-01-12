@@ -76,40 +76,25 @@ def payout(option_type: str, strike: float, exit_: float, notional: float, index
     return layer * notional
 
 
-def validDates(res, start, end):
-    return datetime.date(res.date.year, start.month, start.day) <= res.date <= datetime.date(res.date.year, end.month, end.day)
 
 
 @app.route('/rainfall/<startDate>/<endDate>', methods=['GET'])
 def rainfall_index(startDate: datetime, endDate: datetime):
-    start = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
-    end = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    start = "-".join(startDate.split('-')[1:])
+    end = "-".join(endDate.split('-')[1:])
+    year = fn.date_part('year', RainData.date).alias('year')
 
-    # # * Looking at one month only
-    # # ? What if we have 2 months or more ?
-    if (end.month - start.month == 0):
-        queryStartMonth = fn.date_part('month', RainData.date) == start.month
-        yearAsCol = fn.date_part('year', RainData.date).alias('year')
-        query = (
-            RainData
-            .select(yearAsCol, fn.SUM(RainData.value))
-            .where((queryStartMonth) & (RainData.date.day.between(start.day, end.day)))
-            .group_by(yearAsCol)
+    query = (
+        RainData
+        .select(year, fn.SUM(RainData.value))
+        .where(
+            fn.strftime('%m-%d', RainData.date)
+            .between(start, end)
         )
-        return [{'year': data.year, 'index': data.value} for data in query]
+        .group_by(year)
+    )
 
-    # ToDo: Need to figure out how to do this in an sql statement
-    query = RainData.select()
-    validDatesPartial = functools.partial(validDates, start=start, end=end)
-    filtered_dates = filter(validDatesPartial, query)
-    results = {}
-    for data in filtered_dates:
-        year_exists = results.get(data.date.year)
-        if year_exists:
-            results.update({data.date.year: year_exists + data.value})
-        results.update({data.date.year: data.value})
-
-    return [{'year': data[0], 'index': data[1]} for data in results.items()]
+    return [{'year': data.year, 'index': data.value} for data in query]
 
 
 if __name__ == '__main__':
