@@ -8,17 +8,14 @@
 </script>
 
 <div id="app" class="h-screen grid grid-cols-1 gap-10">
-  <!-- Inputs -->
   <div>
-  <!-- <div> -->
     <Controls />
   </div>
   <!-- Results -->
   <div class="grid grid-cols-3 justify-items-center">
     <!-- Line Graph -->
-    <div>
-      <h1>Line Graph</h1>
-      <!-- <LineGraph/> -->
+    <div> 
+      <LineGraph/>
     </div>
     <!-- Bar Graph -->
     <div>
@@ -30,9 +27,7 @@
       <Stats/>
     </div>
   </div>
-  <!-- Full Results -->
   <div>
-    <!-- <h1>Table</h1> -->
     <Table/>
   </div>
 </div>

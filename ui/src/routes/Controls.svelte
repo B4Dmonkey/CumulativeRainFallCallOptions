@@ -23,7 +23,7 @@
 <div id="layout-login" class="grid grid-cols-3 gap-5 justify-items-center content-start">
   <div class="flex justify-center form-control w-full max-w-xs">
     <label for="input-strike" class="label">
-      <span class="label-text">Strike</span>
+      <span class="label-text font-bold">Strike</span>
     </label>
     <input 
       id="input-strike"
@@ -35,7 +35,7 @@
 
   <div class="flex justify-center form-control w-full max-w-xs">
     <label for="input-exit" class="label">
-      <span class="label-text">Exit</span>
+      <span class="label-text font-bold">Exit</span>
     </label>
     <input 
       id="input-exit"
@@ -47,7 +47,7 @@
 
   <div class="flex justify-center form-control w-full max-w-xs">
     <label for="input-notional" class="label">
-      <span class="label-text">Notional</span>
+      <span class="label-text font-bold">Notional</span>
     </label>
     <input 
       id="input-notional"
@@ -59,7 +59,7 @@
 
   <div class="flex justify-center form-control w-full max-w-xs">
     <label for="input-start" class="label">
-      <span class="label-text">Start Date</span>
+      <span class="label-text font-bold">Start Date</span>
     </label>
     <input 
       type="date" 
@@ -71,7 +71,7 @@
 
   <div class="flex justify-center form-control w-full max-w-xs">
     <label for="input-end" class="label">
-      <span class="label-text">End Date</span>
+      <span class="label-text font-bold">End Date</span>
     </label>
     <input 
       type="date" 
@@ -84,12 +84,13 @@
   <div class="flex justify-evenly w-full max-w-xs">
     <div>
       <label for="input-end" class="label">
-        <span class="label-text">Option Type</span>
+        <span class="label-text font-bold">Option Type</span>
       </label>
       <select class="select w-full max-w-xs" bind:value={$optionType}>
         {#each trade_options as option}
           <option value={option}>
-            {option}
+            
+            {option.charAt(0).toUpperCase() + option.slice(1)}
           </option>
         {/each}
       </select>
