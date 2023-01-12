@@ -37,3 +37,12 @@ def test_calculate_same_month(client):
 
     response = client.get(f"/{start}/{end}/{strike}/{exit_}/{notional}")
     assert type(response.json) == list
+
+def test_calculate_multiple_months(client):
+    def asString(_date): return _date.strftime("%Y-%m-%d")
+    start = asString(datetime.date(2023, 6, 30))
+    end = asString(datetime.date(2023, 7, 1))
+
+    res = client.get(f"/rainfall/{start}/{end}")
+
+    assert False

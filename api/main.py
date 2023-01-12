@@ -1,10 +1,10 @@
 import datetime
-import logging
-from flask import Flask, request
+from flask import Flask
 from flask_cors import CORS
 from models import RainData, database
 from peewee import fn
 import numpy as np
+import functools
 
 
 app = Flask(__name__)
@@ -35,7 +35,7 @@ def calculate(option_type: str, startDate: datetime, endDate: datetime, strike: 
         dict(
             year=i['year'],
             index=i['index'],
-            payout=payout(float(strike), float(exit_),
+            payout=payout(option_type, float(strike), float(exit_),
                           float(notional), i['index'])
         )
         for i in index
@@ -43,12 +43,7 @@ def calculate(option_type: str, startDate: datetime, endDate: datetime, strike: 
 
     index_array = [i['index'] for i in data]
     payout_array = [p['payout'] for p in data]
-    # summary = [
-    #   dict(stat='min', index=min(index_array), payout=min(payout_array)),
-    #   dict(stat='max', index=max(index_array), payout=max(payout_array)),
-    #   dict(stat='avg', index=np.mean(index_array), payout=np.mean(payout_array)),
-    #   dict(stat='std', index=np.std(index_array), payout=np.std(payout_array))
-    # ]
+
     summary = dict(
         index=dict(
             min=min(index_array),
@@ -64,75 +59,57 @@ def calculate(option_type: str, startDate: datetime, endDate: datetime, strike: 
         )
     )
 
-    # summary = [
-    #   {}
-    # ]
-
     return dict(summary=summary, results=data)
 
 
-def payout(strike: float, exit_: float, notional: float, index: float) -> float:
-    # todo need to account for call vs put
-    strikeIndex = max(index - strike, 0)
+CALL = 'call'
+PUT = 'PUT'
+
+
+def payout(option_type: str, strike: float, exit_: float, notional: float, index: float) -> float:
+    # ? Need some kind of defensive coding here just incase we get bad inputs
+    if option_type == CALL:
+        strikeIndex = max(index - strike, 0)
+    elif option_type == PUT:
+        strikeIndex = max(strike - index, 0)
     layer = min(exit_ - strike, strikeIndex)
     return layer * notional
+
+
+def validDates(res, start, end):
+    return datetime.date(res.date.year, start.month, start.day) <= res.date <= datetime.date(res.date.year, end.month, end.day)
 
 
 @app.route('/rainfall/<startDate>/<endDate>', methods=['GET'])
 def rainfall_index(startDate: datetime, endDate: datetime):
     start = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     end = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
-    # Select all dates between month and between days
-    # database.create_tables([RainData], safe=True)
-
-    queryStartMonth = fn.date_part('month', RainData.date) == start.month
-    yearAsCol = fn.date_part('year', RainData.date).alias('year')
-    dayAsCol = fn.date_part('day', RainData.date).alias('day')
 
     # # * Looking at one month only
     # # ? What if we have 2 months or more ?
     if (end.month - start.month == 0):
+        queryStartMonth = fn.date_part('month', RainData.date) == start.month
+        yearAsCol = fn.date_part('year', RainData.date).alias('year')
         query = (
             RainData
             .select(yearAsCol, fn.SUM(RainData.value))
             .where((queryStartMonth) & (RainData.date.day.between(start.day, end.day)))
             .group_by(yearAsCol)
         )
-    return [{'year': data.year, 'index': data.value} for data in query]
-    # return [{'key': data.year, 'value':data.value} for data in query]
-    # return {data.year: data.value for data in query}
-    # queryStartMonth = fn.date_part('month', RainData.date) == 6
-    # queryEndMonth = fn.date_part('month', RainData.date) <= 6
+        return [{'year': data.year, 'index': data.value} for data in query]
 
-    # yearAsCol = fn.date_part('year', RainData.date).alias('year')
-    # monthAsCol = fn.date_part('month', RainData.date).alias('month')
+    # ToDo: Need to figure out how to do this in an sql statement
+    query = RainData.select()
+    validDatesPartial = functools.partial(validDates, start=start, end=end)
+    filtered_dates = filter(validDatesPartial, query)
+    results = {}
+    for data in filtered_dates:
+        year_exists = results.get(data.date.year)
+        if year_exists:
+            results.update({data.date.year: year_exists + data.value})
+        results.update({data.date.year: data.value})
 
-    # mdASCol = fn.date_part('monthday', RainData.date).alias('md')
-    # RainData.select(monthAsCol, dayAsCol, yearAsCol, RainData.value)
-
-    # for data in query:
-    #     log.info(f"Year: {data.year} Value: {data.value}")
-    # print(data)
-    # * Get the year
-    # for data in RainData.select().where((RainData.date.month.between(start.month, end.month)) & (RainData.date.day.between(start.day, end.day))):
-    #     print(f"Date: {data.date} Value: {data.value}")
-    #     x = 1
-    # months = RainData.select().where((RainData.date.month >= start.month)
-    #  & (RainData.date.month <= end.month))
-    # [r for r in RainData.select().where( (RainData.date.month >= 6) & (RainData.date.month <= 6) )]
-    # query = []
-    # query = RainData \
-    #           .select() \
-    #           .where(
-    #             RainData.date.between(
-    #               (fn.date_part('month', RainData.date) == 6),
-    #               (fn.date_part('month', RainData.date) == 6)
-    #             )
-    #           )
-
-    # RainData.select().where(fn.date_part('year', RainData.date) == 2022)
-    # Todo: Return as dict to send back as a json
-    # return "Hello, rainfall!"
+    return [{'year': data[0], 'index': data[1]} for data in results.items()]
 
 
 if __name__ == '__main__':
