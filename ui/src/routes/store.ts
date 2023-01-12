@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 export const strike = writable(0);
 export const exit = writable(0);
 export const notional = writable(0);
-export const optionType = writable(0);
+export const optionType = writable('call');
 
 export const startDate = writable(today());
 export const endDate = writable(today());

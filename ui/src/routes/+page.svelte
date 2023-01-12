@@ -3,31 +3,38 @@
   import Stats from './Stats.svelte';
   import Table from './Table.svelte';
 	import LineGraph from './LineGraph.svelte';
+	import BarGraph from './BarGraph.svelte';
+  import { optionType } from "./store"
 </script>
 
-<!-- <div> -->
-  <!-- <h1>Stats {$stats}</h1> -->
-  <!-- <h1>Strike {$strike}</h1>
-  <h1>Exit {$exit}</h1>
-  <h1>Notional {$notional}</h1>
-  <h1>Start Date {$startDate}</h1>
-  <h1>End Date {$endDate}</h1>
-  <h1>Data {$data}</h1> -->
-<!-- </div> -->
-<div id="app" class="h-screen grid grid-cols-1 gap-10 content-center">
+<h1>Option Type {$optionType}</h1>
+<div id="app" class="h-screen grid grid-cols-1 gap-10">
   <!-- Inputs -->
   <div>
+  <!-- <div> -->
     <Controls />
   </div>
-  <!-- Summary -->
-  <!-- <div>
-    <Stats/>
-  </div> -->
-  <!-- <div>
-    <Table/>
-  </div> -->
-    <!-- <h1>Data goes here</h1> -->
-    <!-- <label for="show" style="display: inline;">Show Line:</label>
-    <input id="show" type="checkbox" bind:checked={show} />
-    <LineGraph {data} {show} /> -->
+  <!-- Results -->
+  <div class="grid grid-cols-3 justify-items-center">
+    <!-- Line Graph -->
+    <div>
+      <h1>Line Graph</h1>
+      <!-- <LineGraph/> -->
+    </div>
+    <!-- Bar Graph -->
+    <div>
+      <h1>Bar Graph</h1>
+      <!-- <BarGraph/> -->
+    </div>
+    <!-- Summary -->
+    <div>
+      <h1>Stats</h1>
+      <!-- <Stats/> -->
+    </div>
+  </div>
+  <!-- Full Results -->
+  <div class="grid grid-cols-1 justify-items-center">
+    <h1>Table</h1>
+    <!-- <Table/> -->
+  </div>
 </div>

@@ -7,8 +7,8 @@
 	import { line, curveBasis } from 'd3-shape';
 
 	// props
-	export let data: Array<object>;
-  export let show: Boolean;
+	let data: Array<object>;
+  let show: Boolean;
 
   //Graph Dimensions
   let el;

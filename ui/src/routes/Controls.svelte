@@ -1,6 +1,9 @@
 <script lang="ts">
   import {strike, exit, notional, optionType, startDate, endDate, data, stats} from "./store"
 
+  // const trade_options = [{id:1, text:'call'}, {id:2, text:'put'}]
+  const trade_options = ['call', 'put']
+
   async function getData() {
     try {
       //Todo this is going to be one api call
@@ -17,7 +20,7 @@
   };
 </script>
 
-<div id="layout-login" class="grid grid-cols-3 gap-5 content-start">
+<div id="layout-login" class="grid grid-cols-3 gap-5 justify-items-center content-start">
   <div class="flex justify-center form-control w-full max-w-xs">
     <label for="input-strike" class="label">
       <span class="label-text">Strike</span>
@@ -78,7 +81,21 @@
     >
   </div>
 
-  <div class="flex justify-center w-full max-w-xs">
-    <button class="btn btn-wide" on:click={getData}>Query</button>
+  <div class="flex justify-evenly w-full max-w-xs">
+    <div>
+      <label for="input-end" class="label">
+        <span class="label-text">Option Type</span>
+      </label>
+      <select class="select w-full max-w-xs" bind:value={$optionType}>
+        {#each trade_options as option}
+          <option value={option}>
+            {option}
+          </option>
+        {/each}
+      </select>
+    </div>
+    <div class="place-self-center">
+      <button class="btn" on:click={getData}>Query</button>
+    </div>
   </div>
 </div>
