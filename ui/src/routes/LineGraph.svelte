@@ -29,11 +29,19 @@
       .scaleLinear()
       .domain([d3.min(years) as number, d3.max(years) as number])
       .range([ margin.left,  width - margin.right]);
-
+    console.log('min year')
+    console.log(d3.min(years) as number)
+    console.log('max year')
+    console.log(d3.max(years) as number)
     yScale = d3
       .scaleLinear()
       .domain([d3.min(rainData) as number, d3.max(rainData) as number])
       .range([height - margin.bottom, margin.top]);
+    
+      console.log('min index')
+      console.log(d3.min(rainData) as number)
+      console.log('max index')
+      console.log(d3.max(rainData) as number)
 
     line = d3
       .line<{ year: number; index: number }>()
@@ -54,8 +62,8 @@
 
 {#if data.length > 0}
   <h2>Rain Fall Index</h2>
-  <h2>Data is {data}</h2>
-  <h3>Line is {line(data)}</h3>
+  <!-- <h2>Data is {data}</h2>
+  <h3>Line is {line(data)}</h3> -->
 {/if}
 <svg {width} {height}>
   <!-- <g class="x-axis" style="stroke-width:4">
