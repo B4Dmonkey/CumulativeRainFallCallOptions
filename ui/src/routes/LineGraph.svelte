@@ -11,15 +11,6 @@
 
   const margin = ({top: 20, right: 30, bottom: 30, left: 40})
 
-	let years: Number[] = data.length > 0 ? data.map((value) => value.year) : [];
-	let rainData: Number[] = data.length > 0 ? data.map((value) => value.index) : [];
-
-  console.log('data is')
-  console.dir(data.length)
-  console.log('Years is')
-  console.dir(years)
-  console.log('Rain Data is')
-  console.dir(rainData)
   let xScale;
   let yScale;
   let line;
@@ -27,7 +18,7 @@
   beforeUpdate(() => {
     xScale = d3
       .scaleLinear()
-      .domain([d3.min(years) as number, d3.max(years) as number])
+      .domain([d3.min(data.map((value) => value.year)) as number, d3.max(data.map((value) => value.year)) as number])
       .range([ margin.left,  width - margin.right]);
     console.log('min year')
     console.log(d3.min(years) as number)
@@ -35,7 +26,7 @@
     console.log(d3.max(years) as number)
     yScale = d3
       .scaleLinear()
-      .domain([d3.min(rainData) as number, d3.max(rainData) as number])
+      .domain([d3.min(data.map((value) => value.index)) as number, d3.max(data.map((value) => value.index)) as number])
       .range([height - margin.bottom, margin.top]);
     
       console.log('min index')
