@@ -8,9 +8,6 @@
 	export let width = 500;
 	export let height = 300;
 
-  console.log('Data changed?')
-  console.log(data)
-
   const margin = ({top: 20, right: 30, bottom: 30, left: 40})
 
 	let years: Number[] = data.length > 0 ? data.map((value) => value.year) : [0];
@@ -42,13 +39,13 @@
 </script>
 
 <svg {width} {height}>
+  {#if data.length > 0}
   <!-- <g class="x-axis" style="stroke-width:4">
     <svg:path d={xAxis}/>
   </g>
   <g class="y-axis" style="stroke-width:4">
     <svg:path d={yAxis}/>
   </g> -->
-  {#if data.length > 0}
 	  <path transition:draw={{ duration: 2000 }} d={line(data)}/>
   {/if}
 </svg>
