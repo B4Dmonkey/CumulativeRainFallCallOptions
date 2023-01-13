@@ -30,6 +30,14 @@ def after_request(response=None):
 
 @app.route("/<option_type>/<startDate>/<endDate>/<strike>/<exit_>/<notional>", methods=['GET'])
 def calculate(option_type: str, startDate: datetime, endDate: datetime, strike: float, exit_: float, notional: float):
+    log.info(f"Get Request inputs ")
+    log.info(f"Option Type: {option_type}")
+    log.info(f"Start Date: {startDate}")
+    log.info(f"End Date: {endDate}")
+    log.info(f"Strike: {strike}")
+    log.info(f"Exit: {exit_}")
+    log.info(f"Notional: {notional}")
+    
     index = rainfall_index(startDate, endDate)
     data = [
         dict(
@@ -63,7 +71,7 @@ def calculate(option_type: str, startDate: datetime, endDate: datetime, strike: 
 
 
 CALL = 'call'
-PUT = 'PUT'
+PUT = 'put'
 
 
 def payout(option_type: str, strike: float, exit_: float, notional: float, index: float) -> float:
@@ -74,8 +82,6 @@ def payout(option_type: str, strike: float, exit_: float, notional: float, index
         strikeIndex = max(strike - index, 0)
     layer = min(exit_ - strike, strikeIndex)
     return layer * notional
-
-
 
 
 @app.route('/rainfall/<startDate>/<endDate>', methods=['GET'])

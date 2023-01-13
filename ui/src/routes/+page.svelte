@@ -4,7 +4,7 @@
   import Table from './Table.svelte';
 	import LineGraph from './LineGraph.svelte';
 	import BarGraph from './BarGraph.svelte';
-  import { optionType } from "./store"
+  import { data } from "./store"
 </script>
 
 <div id="app" class="h-screen grid grid-cols-1 gap-10">
@@ -15,7 +15,7 @@
   <div class="grid grid-cols-3 justify-items-center">
     <!-- Line Graph -->
     <div> 
-      <LineGraph/>
+      <LineGraph data={$data}/>
     </div>
     <!-- Bar Graph -->
     <div>

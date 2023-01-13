@@ -1,74 +1,59 @@
 <script lang="ts">
-
 	import { draw } from 'svelte/transition';
-	
-	import { extent } from 'd3-array';
-	import { scaleLinear } from 'd3-scale';
-	import { line, curveBasis } from 'd3-shape';
+	import * as d3 from 'd3';
+	import { onMount } from 'svelte';
 
-	// props
-	let data: Array<object>;
-  let show: Boolean;
+	//Props
+  export let data: {year:number, index:number}[];
+	export let width = 500;
+	export let height = 300;
 
-  //Graph Dimensions
-  let el;
-  let width = 800;
-	let height = 300;
-	let margin = { top: 20, bottom: 20, left: 20, right: 20 };
+  console.log('Data changed?')
+  console.log(data)
 
-  // d's for axis paths
-	let xPath = `M${margin.left + .5},6V0H${width - margin.right + 1}V6`
-	let yPath = `M-6,${height + .5}H0.5V0.5H-6`
-	
-	// scales
-	const xScale = scaleLinear()
-		.domain(extent(data.map(d => d.age)))
-		.range([5, 95]);
-	
-	const yScale = scaleLinear()
-		.domain(extent(data.map(d => d.temp)))
-		.range([5, 75]);
-	
-	// the path generator
-	const pathLine = line()
-		.x(d => xScale(d.age))
-		.y(d => yScale(d.temp))
-		.curve(curveBasis);
+  const margin = ({top: 20, right: 30, bottom: 30, left: 40})
+
+	let years: Number[] = data.length > 0 ? data.map((value) => value.year) : [0];
+	let rainData = data.length > 0 ? data.map((value) => value.index) : [0];
+
+	let xScale = d3
+		.scaleLinear()
+		.domain([d3.min(years) as number, d3.max(years) as number])
+		.range([ margin.left,  width - margin.right]);
+
+	let yScale = d3
+		.scaleLinear()
+		.domain([d3.min(rainData) as number, d3.max(rainData) as number])
+		.range([height - margin.bottom, margin.top]);
+
+	let line = d3
+		.line<{ year: number; index: number }>()
+		.x((d) => xScale(d.year))
+		.y((d) => yScale(d.index));
+
+	let xAxis = d3.axisBottom(xScale);
+	let yAxis = d3.axisLeft(yScale);
+  onMount(() => {
+    d3.select('.x-axis')
+      .call(xAxis);
+    d3.select('.y-axis')
+      .call(yAxis);
+  });
 </script>
 
-{#if (show)}
-  <!-- <svg viewBox="0 0 100 100"> -->
-  <svg bind:this={el} transform="translate({margin.left}, {margin.top})">
-      <!-- Line Data -->
-      <g>
-        <path 
-          transition:draw={{duration: 2000}}
-          d={pathLine(data)} 
-        />
-      </g>
-
-      <!-- X Axis -->
-      <g transform="translate(0, {height})">
-        <!-- "M 20.5, 6 V0 H781 V6" -->
-        <!-- Move to a point draw a vertical line draw a horizontal line draw a vertical line -->
-        <path stroke="currentColor" d="{xPath}" fill="none" />
-      </g>
-      
-      <!-- y axis -->
-      <g transform="translate({margin.left}, 0)">
-        <path stroke="currentColor" d="{yPath}" fill="none" />
-      </g>
-  </svg>
-{/if}
+<svg {width} {height}>
+  <!-- <g class="x-axis" style="stroke-width:4">
+    <svg:path d={xAxis}/>
+  </g>
+  <g class="y-axis" style="stroke-width:4">
+    <svg:path d={yAxis}/>
+  </g> -->
+  {#if data.length > 0}
+	  <path transition:draw={{ duration: 2000 }} d={line(data)}/>
+  {/if}
+</svg>
 
 <style>
-  svg {
-		width: 100%;
-		height: 100%;
-	}
-	.tick {
-		font-size: 11px;
-	}
 	path {
 		stroke: black;
 		stroke-width: 2;

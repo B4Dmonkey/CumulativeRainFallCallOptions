@@ -8,11 +8,12 @@ export const optionType = writable('call');
 
 export const startDate = writable(today());
 export const endDate = writable(today());
-// export const data = writable([]);
-// export const stats = writable({});
+//? Should probably make the following an interface ?
+export const data = writable<{year:number, index:number}[]>([]);
+export const stats = writable({});
 
-export const data = writable(old_data.results);
-export const stats = writable(old_data.summary);
+// export const data = writable(old_data.results);
+// export const stats = writable(old_data.summary);
 function today() {
 	const date = new Date();
 	const year = date.getFullYear();
