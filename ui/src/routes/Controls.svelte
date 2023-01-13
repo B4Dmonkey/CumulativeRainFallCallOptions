@@ -13,7 +13,6 @@
       const data = await response.json();
       $data = data.results;
       $stats = data.summary;
-      
     } catch (error) {
       console.error(`Error getting Rain Fall Index\n${error}`);
     }

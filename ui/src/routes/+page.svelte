@@ -14,13 +14,12 @@
   <!-- Results -->
   <div class="grid grid-cols-3 justify-items-center">
     <!-- Line Graph -->
-    <div> 
-      <LineGraph data={$data}/>
+    <div>
+      <LineGraph bind:data={$data}/>
     </div>
     <!-- Bar Graph -->
     <div>
-      <h1>Bar Graph</h1>
-      <!-- <BarGraph/> -->
+      <BarGraph bind:data={$data}/>
     </div>
     <!-- Summary -->
     <div>

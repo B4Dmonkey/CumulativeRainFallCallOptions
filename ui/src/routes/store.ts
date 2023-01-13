@@ -9,7 +9,9 @@ export const optionType = writable('call');
 export const startDate = writable(today());
 export const endDate = writable(today());
 //? Should probably make the following an interface ?
-export const data = writable<{year:number, index:number}[]>([]);
+export const data = writable<{year:number, index:number, payout:number}[]>([]);
+
+console.log('data:', data);
 export const stats = writable({});
 
 // export const data = writable(old_data.results);

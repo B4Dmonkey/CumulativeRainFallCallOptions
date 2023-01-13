@@ -3,5 +3,8 @@
     "./api/test_app.py",
   ],
   "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true
+  "python.testing.pytestEnabled": true,
+  "cSpell.words": [
+    "Plotly"
+  ]
 }
