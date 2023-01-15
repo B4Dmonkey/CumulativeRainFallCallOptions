@@ -20,19 +20,11 @@
       .scaleLinear()
       .domain([d3.min(data.map((value) => value.year)) as number, d3.max(data.map((value) => value.year)) as number])
       .range([ margin.left,  width - margin.right]);
-    console.log('min year')
-    console.log(d3.min(years) as number)
-    console.log('max year')
-    console.log(d3.max(years) as number)
+
     yScale = d3
       .scaleLinear()
       .domain([d3.min(data.map((value) => value.index)) as number, d3.max(data.map((value) => value.index)) as number])
       .range([height - margin.bottom, margin.top]);
-    
-      console.log('min index')
-      console.log(d3.min(rainData) as number)
-      console.log('max index')
-      console.log(d3.max(rainData) as number)
 
     line = d3
       .line<{ year: number; index: number }>()
